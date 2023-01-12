@@ -14,6 +14,12 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-LaboraMobile-LaboraMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-LaboraMobile-LaboraMobileTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		9DFB350DECF64865AA2B9E9F /* SFNSDisplay-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8F8D03F98BE542A3AB033001 /* SFNSDisplay-Black.otf */; };
+		E3522F1D99F04753AD931155 /* SFNSDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B87551C6B74349149511F02A /* SFNSDisplay-Bold.otf */; };
+		E7F14E6BAB4A4029AC814A50 /* SFNSDisplay-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = B07B928288024A3B9B1B0AB4 /* SFNSDisplay-Light.otf */; };
+		40C7E6704B844E29A518DE66 /* SFNSDisplay-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B4C9459BEB4F4A1582358399 /* SFNSDisplay-Regular.otf */; };
+		9106D9F37BC34DFBAF1A97EE /* SFNSText-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AC3CE77BDED4ECAB761756E /* SFNSText-Bold.otf */; };
+		AF99D5EBA9E1493EB9B464C9 /* SFNSText-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 211E14258D5E440F9F7CB342 /* SFNSText-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +50,12 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LaboraMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-LaboraMobile-LaboraMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaboraMobile-LaboraMobileTests.release.xcconfig"; path = "Target Support Files/Pods-LaboraMobile-LaboraMobileTests/Pods-LaboraMobile-LaboraMobileTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		8F8D03F98BE542A3AB033001 /* SFNSDisplay-Black.otf */ = {isa = PBXFileReference; name = "SFNSDisplay-Black.otf"; path = "../src/assets/fonts/SFNSDisplay-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B87551C6B74349149511F02A /* SFNSDisplay-Bold.otf */ = {isa = PBXFileReference; name = "SFNSDisplay-Bold.otf"; path = "../src/assets/fonts/SFNSDisplay-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B07B928288024A3B9B1B0AB4 /* SFNSDisplay-Light.otf */ = {isa = PBXFileReference; name = "SFNSDisplay-Light.otf"; path = "../src/assets/fonts/SFNSDisplay-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B4C9459BEB4F4A1582358399 /* SFNSDisplay-Regular.otf */ = {isa = PBXFileReference; name = "SFNSDisplay-Regular.otf"; path = "../src/assets/fonts/SFNSDisplay-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1AC3CE77BDED4ECAB761756E /* SFNSText-Bold.otf */ = {isa = PBXFileReference; name = "SFNSText-Bold.otf"; path = "../src/assets/fonts/SFNSText-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		211E14258D5E440F9F7CB342 /* SFNSText-Regular.otf */ = {isa = PBXFileReference; name = "SFNSText-Regular.otf"; path = "../src/assets/fonts/SFNSText-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +134,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				E8B871E3AEDD4AB0ACB5D68D /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +160,20 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		E8B871E3AEDD4AB0ACB5D68D /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				8F8D03F98BE542A3AB033001 /* SFNSDisplay-Black.otf */,
+				B87551C6B74349149511F02A /* SFNSDisplay-Bold.otf */,
+				B07B928288024A3B9B1B0AB4 /* SFNSDisplay-Light.otf */,
+				B4C9459BEB4F4A1582358399 /* SFNSDisplay-Regular.otf */,
+				1AC3CE77BDED4ECAB761756E /* SFNSText-Bold.otf */,
+				211E14258D5E440F9F7CB342 /* SFNSText-Regular.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +271,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				9DFB350DECF64865AA2B9E9F /* SFNSDisplay-Black.otf in Resources */,
+				E3522F1D99F04753AD931155 /* SFNSDisplay-Bold.otf in Resources */,
+				E7F14E6BAB4A4029AC814A50 /* SFNSDisplay-Light.otf in Resources */,
+				40C7E6704B844E29A518DE66 /* SFNSDisplay-Regular.otf in Resources */,
+				9106D9F37BC34DFBAF1A97EE /* SFNSText-Bold.otf in Resources */,
+				AF99D5EBA9E1493EB9B464C9 /* SFNSText-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
