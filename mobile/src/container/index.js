@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DaftarTournament from '../screens/DaftarTournament';
 import FormTournament from '../screens/FormTournament';
+import BayarTournament from '../screens/BayarTournament';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,11 @@ export default function () {
         <Stack.Screen
           name="form-tournament"
           component={FormTournament}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="bayar-tournament"
+          component={BayarTournament}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

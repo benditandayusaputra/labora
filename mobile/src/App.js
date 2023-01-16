@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, ThemeManager} from 'react-native-ui-lib';
 import Container from './container';
+import {Provider} from 'react-redux';
+import store from './store';
 
 ThemeManager.setComponentTheme('Text', {
   style: {
@@ -18,7 +20,9 @@ ThemeManager.setComponentTheme('Button', {
 export default function () {
   return (
     <View flex>
-      <Container />
+      <Provider store={store}>
+        <Container />
+      </Provider>
     </View>
   );
 }

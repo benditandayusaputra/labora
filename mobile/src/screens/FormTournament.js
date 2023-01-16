@@ -1,32 +1,35 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, ScrollView, StyleSheet, Alert} from 'react-native';
+
 import {View, Text, Button, Picker, Incubator} from 'react-native-ui-lib';
+const {TextField} = Incubator;
+
 import tailwind from 'twrnc';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {getItemsClub} from '../store/slice/masterSlice';
 
-const {TextField} = Incubator;
-const options = [
-  {label: 'Req Regum Qeon', value: 'rrq'},
-  {label: 'Evos', value: 'evos'},
-  {label: 'Louvre', value: 'louvre'},
-  {label: 'Geek Fam', value: 'geek'},
-];
 export default function ({navigation}) {
   const [clubModel, setClubModel] = useState(null);
   const [itemsInputanNama, setItemsInputanNama] = useState([]);
   const [modelTextNama, setModelTextNama] = useState(null);
   const [modelNomorTelepon, setModelNomorTelepon] = useState(null);
+  const itemsClub = useSelector(getItemsClub);
 
   const addPersonHandler = () => {
-    if (itemsInputanNama.length < 5) {
-      setItemsInputanNama(prevState => prevState.concat(modelTextNama));
-      setModelTextNama(null);
+    if (modelTextNama) {
+      if (itemsInputanNama.length < 5) {
+        setItemsInputanNama(prevState => prevState.concat(modelTextNama));
+        setModelTextNama(null);
+      } else {
+        Alert.alert(
+          'Gagal',
+          'Jumlah nama yang didaftarkan tidak boleh lebih dari 5',
+          ['Oke'],
+        );
+      }
     } else {
-      Alert.alert(
-        'Gagal',
-        'Jumlah nama yang didaftarkan tidak boleh lebih dari 5',
-        ['Oke'],
-      );
+      Alert.alert('Gagal', 'Nama masih kosong', ['Oke']);
     }
   };
   const deleteItemHandler = nama => {
@@ -44,11 +47,12 @@ export default function ({navigation}) {
     ]);
   };
   const prosesDaftarHandler = () => {
-    if (modelNomorTelepon && clubModel && itemsInputanNama.length) {
-      console.log('proses daftar');
-    } else {
-      Alert.alert('Gagal', 'Mohon cek kembali form anda', ['Oke']);
-    }
+    // if (modelNomorTelepon && clubModel && itemsInputanNama.length) {
+    //   console.log('proses daftar');
+    // } else {
+    //   Alert.alert('Gagal', 'Mohon cek kembali form anda', ['Oke']);
+    // }
+    navigation.navigate('bayar-tournament');
   };
 
   return (
@@ -83,7 +87,7 @@ export default function ({navigation}) {
             topBarProps={{title: 'Daftar Club'}}
             onChange={value => setClubModel(value.value)}
             value={clubModel}>
-            {options.map(option => (
+            {itemsClub.map(option => (
               <Picker.Item
                 key={option.value}
                 value={option.value}
