@@ -17,9 +17,9 @@ class ClubController extends Controller
     public function index()
     {
         try {
-            $this->sendResponse(Club::all(), 'Data Berhasil Didapatkan');
+            return $this->sendResponse(Club::all(), 'Data Berhasil Didapatkan');
         } catch (\Exception $e) {
-            $this->sendError($e->getMessage(), [], 500);
+            return $this->sendError($e->getMessage(), [], 500);
         }
     }
 
@@ -46,7 +46,7 @@ class ClubController extends Controller
     
             return $this->sendResponse($data, 'Club Berhasil Ditambahkan.');
         } catch (\Exception $e) {
-            $this->sendError($e->getMessage(), [], 500);
+            return $this->sendError($e->getMessage(), [], 500);
         }
     }
 
