@@ -22,7 +22,7 @@ export default function ({navigation}) {
     const response = await requestCharge({
       payment_type: 'gopay',
       transaction_details: {
-        order_id: '1673871547163',
+        order_id: '1673872498125',
         gross_amount: 20000,
       },
       item_details: [
