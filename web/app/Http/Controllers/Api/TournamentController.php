@@ -16,7 +16,7 @@ class TournamentController extends Controller
     public function index()
     {
         try {
-            return $this->sendResponse(Tournament::latest(), 'Data Berhasil Didapatkan');
+            return $this->sendResponse(Tournament::latest()->get(), 'Data Berhasil Didapatkan');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), [], 500);
         }

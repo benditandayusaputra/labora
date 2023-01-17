@@ -117,7 +117,7 @@ class RegisterTournamentController extends Controller
     
             return $this->sendResponse($registerTournament, 'Berhasil Mendaftar');
         } catch (\Exception $e) {
-            $this->sendError($e->getMessage(), [], 500);
+            return $this->sendError($e->getMessage(), [], 500);
         }
     }
 
