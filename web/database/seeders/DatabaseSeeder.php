@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(ClubSeeder::class);
+        $this->call(TournamentSeeder::class);
         // \App\Models\User::factory(10)->create();
     }
 }
