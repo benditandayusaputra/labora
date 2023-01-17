@@ -17,12 +17,12 @@ class CreateTournamentsTable extends Migration
             $table->id();
             $table->string('name', 255);
             $table->text('description')->nullable();
-            $table->bigInteger('price');
-            $table->bigInteger('quota');
-            $table->boolean('is_open');
-            $table->dateTime('start_regist');
-            $table->dateTime('finish_regist');
-            $table->text('photo');
+            $table->bigInteger('price')->nullable();
+            $table->bigInteger('quota')->nullable();
+            $table->boolean('is_open')->nullable();
+            $table->dateTime('start_regist')->nullable();
+            $table->dateTime('finish_regist')->nullable();
+            $table->text('photo')->nullable();
             $table->timestamps();
         });
     }
