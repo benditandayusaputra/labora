@@ -22,22 +22,22 @@ export default function ({navigation}) {
     const response = await requestCharge({
       payment_type: 'gopay',
       transaction_details: {
-        order_id: '1673872498125',
-        gross_amount: 20000,
+        order_id: '001',
+        gross_amount: 10000,
       },
       item_details: [
         {
           id: '1',
-          price: 20000,
+          price: 10000,
           quantity: 1,
           name: 'Baju',
         },
       ],
       customer_details: {
-        first_name: 'Ibnu',
-        last_name: 'Shevayanto',
-        email: 'ibnushevayanto@gmail.com',
-        phone: '081386909757',
+        first_name: 'Ganjar',
+        last_name: 'Pranowo',
+        email: 'ganjar@gmail.com',
+        phone: '081386909765',
       },
       gopay: {
         enable_callback: true,
