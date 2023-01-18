@@ -16,7 +16,7 @@ class CreateRegisterTournamentsTable extends Migration
         Schema::create('register_tournaments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('club_id');
-            $table->bigInteger('tournamen_id');
+            $table->bigInteger('tournament_id');
             $table->string('name');
             $table->string('hp')->nullable();
             $table->boolean('status');

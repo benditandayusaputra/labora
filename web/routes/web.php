@@ -14,5 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('admin.dashboard.index');
 });
+
+Route::get('/dashboard', function () {
+    return view('admin.dashboard.index');
+});
+
+Route::resource('club', 'ClubController');
+Route::resource('tournament', 'TournamentController');
+Route::resource('register_tournament', 'RegisterTournamentController');

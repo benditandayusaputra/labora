@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Club;
 use App\Models\RegisterTournament;
 use App\Models\Tournament;
 use Illuminate\Http\Request;
@@ -14,13 +15,28 @@ class RegisterTournamentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            return $this->sendResponse(RegisterTournament::latest(), 'Data Berhasil Didapatkan');
-        } catch (\Exception $e) {
-            return $this->sendError($e->getMessage(), [], 500);
+        $tournaments = Tournament::latest()->get();
+        $clubs = Club::latest()->get();
+        
+        if ( $request ) {
+            $data = RegisterTournament::latest();
+            if ( $request->tournament_id ) {
+                $data->where('tournament_id', $request->tournament_id);
+            }
+            if ( $request->club_id ) {
+                $data->where('club_id', $request->club_id);
+            }
+            if ( $request->status ) {
+                $data->where('status', $request->status);
+            }
+            $data = $data->paginate(50);
+        } else {
+            $data = RegisterTournament::latest()->paginate(50);
         }
+        
+        return view('admin.register_tournament.index', compact('data', 'tournaments', 'clubs', 'request'));
     }
 
     /**

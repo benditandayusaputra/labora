@@ -45,7 +45,7 @@ class RegisterTournamentController extends Controller
                 'tournament_id' => 'required',
                 'club_id'       => 'required',
                 'name'          => 'required',
-                'no_hp'         => 'required',
+                'hp'            => 'required',
                 'status'        => 'required',
             ]);
        

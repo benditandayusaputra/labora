@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class RegisterTournament extends Model
 {
     use HasFactory;
+
+    /**
+     * The relationships include.
+     *
+     * @var array
+     */
+    protected $with = ['tournament', 'club'];
+
+    public function tournament()
+    {
+        return $this->hasOne('App\Models\Tournament', 'id', 'tournament_id');
+    }
+    
+    public function club()
+    {
+        return $this->hasOne('App\Models\Club', 'id', 'club_id');
+    }
 }

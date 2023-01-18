@@ -14,7 +14,7 @@ class ClubController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.club.index', ['clubs' => Club::latest()->get()]);
     }
 
     /**

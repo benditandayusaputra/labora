@@ -14,7 +14,7 @@ class TournamentController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.tournament.index', ['tournaments' => Tournament::latest()->get()]);
     }
 
     /**
