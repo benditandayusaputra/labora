@@ -56,9 +56,9 @@ class RegisterTournamentController extends Controller
                 foreach (json_decode($request->name) as $value) {
                     $tournament = Tournament::find($request->tournament_id);
                     if ( $tournament ) {
-                        $dataSave = array_merge($request->except('name'), ['name' => $value['name']]);
+                        $dataSave = array_merge($request->except('name'), ['name' => $value]);
                         RegisterTournament::create($dataSave);
-                        $tournament->quota = $tournament->qouta - 1;
+                        $tournament->quota = intval($tournament->qouta) - 1;
                         $tournament->save();
                     }
                 }
@@ -66,7 +66,7 @@ class RegisterTournamentController extends Controller
                 $tournament = Tournament::find($request->tournament_id);
                 if ( $tournament ) {
                     RegisterTournament::create($input);
-                    $tournament->quota = $tournament->qouta - 1;
+                    $tournament->quota = intval($tournament->qouta) - 1;
                     $tournament->save();
                 }
             }
