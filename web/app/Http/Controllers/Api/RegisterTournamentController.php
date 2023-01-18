@@ -40,7 +40,6 @@ class RegisterTournamentController extends Controller
     {
         try {
             $input = $request->all();
-       
             $validator = Validator::make($input, [
                 'tournament_id' => 'required',
                 'club_id'       => 'required',
@@ -53,7 +52,7 @@ class RegisterTournamentController extends Controller
                 return $this->sendError('Validation Error.', $validator->errors(), 422);       
             }
 
-            if ( count(json_decode($request->name)) > 1 ) {
+            if ( json_decode($request->name) > 1 ) {
                 foreach (json_decode($request->name) as $value) {
                     $tournament = Tournament::find($request->tournament_id);
                     if ( $tournament ) {
@@ -66,8 +65,7 @@ class RegisterTournamentController extends Controller
             } else {
                 $tournament = Tournament::find($request->tournament_id);
                 if ( $tournament ) {
-                    $dataSave = $request->all();
-                    RegisterTournament::create($dataSave);
+                    RegisterTournament::create($input);
                     $tournament->quota = $tournament->qouta - 1;
                     $tournament->save();
                 }
@@ -76,7 +74,7 @@ class RegisterTournamentController extends Controller
     
             return $this->sendResponse($request->all(), 'Berhasil Mendaftar');
         } catch (\Exception $e) {
-            $this->sendError($e->getMessage(), [], 500);
+            return $this->sendError($e->getMessage(), [], 500);
         }
     }
 
