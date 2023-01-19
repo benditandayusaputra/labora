@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Models\RegisterTournament;
 use App\Models\Tournament;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 class RegisterTournamentController extends Controller
 {
@@ -52,27 +55,108 @@ class RegisterTournamentController extends Controller
                 return $this->sendError('Validation Error.', $validator->errors(), 422);       
             }
 
-            if ( json_decode($request->name) > 1 ) {
-                foreach (json_decode($request->name) as $value) {
+            if ( json_decode($request->name) ) {
+                $names = json_decode($request->name);
+                $price = 0;
+                $tournamentData = Tournament::where('id', $request->tournament_id)->first();
+                foreach ($names as $value) {
                     $tournament = Tournament::find($request->tournament_id);
                     if ( $tournament ) {
                         $dataSave = array_merge($request->except('name'), ['name' => $value]);
                         RegisterTournament::create($dataSave);
-                        $tournament->quota = intval($tournament->qouta) - 1;
+                        $tournament->quota = intval($tournamentData->qouta) - 1;
                         $tournament->save();
+                        $price = $price + intval($tournamentData->price);
                     }
                 }
+
+                $dataPayment = [
+                    'gross_amount'      => $price,
+                    'payment_link_id'   => '',
+                    'price'             => $tournamentData->price,
+                    'quantity'          => count($names),
+                    'name'              => 'Register'
+                ];
+
+                $dataPayment = Payment::create($dataPayment);
+
             } else {
                 $tournament = Tournament::find($request->tournament_id);
                 if ( $tournament ) {
+                    $tournamentData = Tournament::where('id', $request->tournament_id)->first();
                     RegisterTournament::create($input);
                     $tournament->quota = intval($tournament->qouta) - 1;
                     $tournament->save();
                 }
+
+                $dataPayment = [
+                    'gross_amount'      => $tournamentData->price,
+                    'payment_link_id'   => '',
+                    'price'             => $tournamentData->price,
+                    'quantity'          => 1,
+                    'name'              => 'Register'
+                ];
+
+                $dataPayment = Payment::create($dataPayment);
             }
             
-    
-            return $this->sendResponse($request->all(), 'Berhasil Mendaftar');
+            $headerReq = [
+                'Accept'        => 'application/json',
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Basic U0ItTWlkLXNlcnZlci1iNEl1RUJ0T1pqeUNUV0pfZmV2Z3RqdEQ6',
+            ];
+
+            $bodyReq = [
+                "transaction_details" => [
+                  "order_id" => strval($dataPayment->id),
+                  "gross_amount" => $dataPayment->gross_amount,
+                  "payment_link_id" => "Register-".$dataPayment->id
+                ],
+                "credit_card" => [
+                  "secure" => true
+                ],
+                "usage_limit" =>  1,
+                "expiry" => [
+                  "start_time" => date('Y-m-d H:i')." +0700",
+                  "duration" => 20,
+                  "unit" => "days"
+                ],
+                "enabled_payments" => [
+                  "qris",
+                  "gopay"
+                ],
+                "item_details" => [
+                  [
+                    "id" => "reg-".$dataPayment->id,
+                    "name" => "Register",
+                    "price" => $dataPayment->price,
+                    "quantity" => $dataPayment->quantity,
+                    "brand" => "Labora",
+                    "category" => "Furniture",
+                    "merchant_name" => "PT. Labora"
+                  ]
+                ],
+                "customer_details" => [
+                  "first_name" => $request->name,
+                //   "last_name" => "Tandayu",
+                  "email" => "tandayubend10@gmail.com",
+                  "phone" => "+6285876878126",
+                  "notes" => "Thank you for your purchase. Please follow the instructions to pay."
+                ],
+              "custom_field1" => "custom field 1 content", 
+              "custom_field2" => "custom field 2 content", 
+              "custom_field3" => "custom field 3 content"
+            ];
+            
+            $client = new Client([
+                'headers' => $headerReq
+            ]);
+            
+            $response = $client->post('https://api.sandbox.midtrans.com/v1/payment-links',
+                ['body' => json_encode($bodyReq)]
+            );
+
+            return $this->sendResponse($dataPayment, 'Berhasil Mendaftar');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), [], 500);
         }

@@ -7,6 +7,8 @@ use App\Models\RegisterTournament;
 use App\Models\Tournament;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 class RegisterTournamentController extends Controller
 {
@@ -17,6 +19,7 @@ class RegisterTournamentController extends Controller
      */
     public function index(Request $request)
     {
+
         $tournaments = Tournament::latest()->get();
         $clubs = Club::latest()->get();
         
@@ -35,6 +38,10 @@ class RegisterTournamentController extends Controller
         } else {
             $data = RegisterTournament::latest()->paginate(50);
         }
+
+        // $client = new Client();
+        // $client->request();
+        // $client = new GuzzleRequest('POST', 'https://api.sandbox.midtrans.com/v1/payment-links', $headerReq);
         
         return view('admin.register_tournament.index', compact('data', 'tournaments', 'clubs', 'request'));
     }
