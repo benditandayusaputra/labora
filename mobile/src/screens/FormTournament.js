@@ -1,25 +1,64 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {TouchableOpacity, ScrollView, StyleSheet, Alert} from 'react-native';
-
 import {View, Text, Button, Picker, Incubator} from 'react-native-ui-lib';
-const {TextField} = Incubator;
-
 import tailwind from 'twrnc';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {getItemsClub} from '../store/slice/masterSlice';
+import LoadingOverlay from '../components/LoadingOverlay';
+import {reqItemsClub, reqSimpanTournament} from '../utils/tournament';
+import {SET_ITEMS_CLUB} from '../store/slice/masterSlice';
+import {
+  SET_VALUE_FORM_TOURNAMENT,
+  getForm,
+} from '../store/slice/tournamentSlice';
+import {useIsFocused} from '@react-navigation/native';
 
-export default function ({navigation}) {
-  const [clubModel, setClubModel] = useState(null);
+const {TextField} = Incubator;
+
+export default function ({navigation, route}) {
   const [itemsInputanNama, setItemsInputanNama] = useState([]);
   const [modelTextNama, setModelTextNama] = useState(null);
-  const [modelNomorTelepon, setModelNomorTelepon] = useState(null);
   const itemsClub = useSelector(getItemsClub);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFocussed = useIsFocused();
+  const dispatch = useDispatch();
+  const form = useSelector(getForm);
 
+  const simpanTournamentHandler = async type => {
+    setIsLoading(true);
+    const {status} = await reqSimpanTournament(form);
+    if (status) {
+      if (type === 'waiting_list') {
+        navigation.navigate('daftar-tournament');
+      } else {
+        navigation.navigate('bayar-tournament');
+      }
+    }
+    setIsLoading(false);
+  };
   const addPersonHandler = () => {
     if (modelTextNama) {
       if (itemsInputanNama.length < 5) {
-        setItemsInputanNama(prevState => prevState.concat(modelTextNama));
+        setItemsInputanNama(prevState => {
+          const items = prevState.concat(modelTextNama);
+          if (items.length === 1) {
+            dispatch(
+              SET_VALUE_FORM_TOURNAMENT({
+                value: modelTextNama,
+                key: 'name',
+              }),
+            );
+          } else if (items.length > 1) {
+            dispatch(
+              SET_VALUE_FORM_TOURNAMENT({
+                value: JSON.stringify(items),
+                key: 'name',
+              }),
+            );
+          }
+          return items;
+        });
         setModelTextNama(null);
       } else {
         Alert.alert(
@@ -39,24 +78,77 @@ export default function ({navigation}) {
         text: 'Yakin',
         style: 'destructive',
         onPress: () => {
-          setItemsInputanNama(prevState =>
-            prevState.filter(item => item !== nama),
-          );
+          setItemsInputanNama(prevState => {
+            const items = prevState.filter(item => item !== nama);
+            if (items.length === 1) {
+              dispatch(
+                SET_VALUE_FORM_TOURNAMENT({
+                  value: items[0],
+                  key: 'name',
+                }),
+              );
+            } else if (items.length > 1) {
+              dispatch(
+                SET_VALUE_FORM_TOURNAMENT({
+                  value: JSON.stringify(items),
+                  key: 'name',
+                }),
+              );
+            } else {
+              dispatch(
+                SET_VALUE_FORM_TOURNAMENT({
+                  value: null,
+                  key: 'name',
+                }),
+              );
+            }
+            return items;
+          });
         },
       },
     ]);
   };
   const prosesDaftarHandler = () => {
-    // if (modelNomorTelepon && clubModel && itemsInputanNama.length) {
-    //   console.log('proses daftar');
-    // } else {
-    //   Alert.alert('Gagal', 'Mohon cek kembali form anda', ['Oke']);
-    // }
-    navigation.navigate('bayar-tournament');
+    if (form.hp && form.club_id && itemsInputanNama.length) {
+      Alert.alert('Perhatian', 'Mohon pilih jenis pendaftaran', [
+        'Batal',
+        {
+          text: 'Waiting List',
+          style: 'destructive',
+          onPress: () => simpanTournamentHandler('waiting_list'),
+        },
+        {
+          text: 'Daftar',
+          style: 'default',
+          onPress: () => simpanTournamentHandler('daftar'),
+        },
+      ]);
+    } else {
+      Alert.alert('Gagal', 'Mohon cek kembali form anda', ['Oke']);
+    }
   };
+  const loadItemsClub = useCallback(async () => {
+    setIsLoading(true);
+    const {status, data} = await reqItemsClub();
+    if (status) {
+      dispatch(SET_ITEMS_CLUB(data));
+    }
+    setIsLoading(false);
+  }, [dispatch]);
+  const {tournament_id, nama_tournament} = route.params;
+
+  useEffect(() => {
+    if (isFocussed) {
+      dispatch(
+        SET_VALUE_FORM_TOURNAMENT({value: tournament_id, key: 'tournament_id'}),
+      );
+      loadItemsClub();
+    }
+  }, [isFocussed, loadItemsClub, tournament_id, dispatch]);
 
   return (
     <View flex style={tailwind`p-4`}>
+      {isLoading && <LoadingOverlay />}
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons
           name="ios-arrow-back-circle-sharp"
@@ -67,7 +159,7 @@ export default function ({navigation}) {
       <View>
         <Text
           style={[{fontFamily: 'SFNSDisplay-Black'}, tailwind`text-3xl mt-4`]}>
-          Mobile Legend Championship
+          {nama_tournament}
         </Text>
       </View>
       <ScrollView
@@ -79,23 +171,32 @@ export default function ({navigation}) {
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
             Club
           </Text>
-          <Picker
-            showSearch
-            placeholder={'Pilih Club'}
-            style={styles.underlineField}
-            migrateTextField
-            topBarProps={{title: 'Daftar Club'}}
-            onChange={value => setClubModel(value.value)}
-            value={clubModel}>
-            {itemsClub.map(option => (
-              <Picker.Item
-                key={option.value}
-                value={option.value}
-                label={option.label}
-                disabled={option.disabled}
-              />
-            ))}
-          </Picker>
+          {!isLoading && (
+            <Picker
+              showSearch
+              placeholder={'Pilih Club'}
+              style={styles.underlineField}
+              migrateTextField
+              topBarProps={{title: 'Daftar Club'}}
+              onChange={item =>
+                dispatch(
+                  SET_VALUE_FORM_TOURNAMENT({
+                    value: item.value,
+                    key: 'club_id',
+                  }),
+                )
+              }
+              value={form.club_id}>
+              {itemsClub.map(item => (
+                <Picker.Item
+                  key={item.id}
+                  value={item.id}
+                  label={item.name}
+                  disabled={item.disabled}
+                />
+              ))}
+            </Picker>
+          )}
         </View>
         <View style={tailwind`mb-2`}>
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
@@ -138,9 +239,11 @@ export default function ({navigation}) {
             Nomor Telepon
           </Text>
           <TextField
-            value={modelNomorTelepon}
+            value={form.hp}
             keyboardType="number-pad"
-            onChangeText={value => setModelNomorTelepon(value)}
+            onChangeText={value =>
+              dispatch(SET_VALUE_FORM_TOURNAMENT({value, key: 'hp'}))
+            }
             placeholder="Input Nomor Telepon"
             style={styles.underlineField}
           />
