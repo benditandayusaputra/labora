@@ -132,7 +132,7 @@ class RegisterTournamentController extends Controller
                     "price" => $dataPayment->price,
                     "quantity" => $dataPayment->quantity,
                     "brand" => "Labora",
-                    "category" => "Furniture",
+                    "category" => "Register",
                     "merchant_name" => "PT. Labora"
                   ]
                 ],
@@ -140,12 +140,12 @@ class RegisterTournamentController extends Controller
                   "first_name" => $request->name,
                 //   "last_name" => "Tandayu",
                   "email" => "tandayubend10@gmail.com",
-                  "phone" => "+6285876878126",
-                  "notes" => "Thank you for your purchase. Please follow the instructions to pay."
+                  "phone" => $request->hp,
+                  "notes" => "Terimakasih Telah Mendaftar, Silahkan Lakukan Pembayaran Anda."
                 ],
-              "custom_field1" => "custom field 1 content", 
-              "custom_field2" => "custom field 2 content", 
-              "custom_field3" => "custom field 3 content"
+            //   "custom_field1" => "custom field 1 content", 
+            //   "custom_field2" => "custom field 2 content", 
+            //   "custom_field3" => "custom field 3 content"
             ];
             
             $client = new Client([
@@ -156,7 +156,7 @@ class RegisterTournamentController extends Controller
                 ['body' => json_encode($bodyReq)]
             );
 
-            return $this->sendResponse($dataPayment, 'Berhasil Mendaftar');
+            return $this->sendResponse($bodyReq, 'Berhasil Mendaftar');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), [], 500);
         }
