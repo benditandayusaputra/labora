@@ -241,7 +241,7 @@ class RegisterTournamentController extends Controller
                 'status' => 1
             ]);
     
-            return $this->sendResponse($registerTournament, 'Berhasil Update Status');
+            return view('admin.register_tournament.status');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), [], 500);
         }

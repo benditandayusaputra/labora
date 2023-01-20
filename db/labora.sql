@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Jan 2023 pada 16.03
+-- Waktu pembuatan: 20 Jan 2023 pada 15.31
 -- Versi server: 10.4.13-MariaDB
 -- Versi PHP: 7.3.20
 
@@ -78,13 +78,14 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(15, '2014_10_12_000000_create_users_table', 1),
-(16, '2014_10_12_100000_create_password_resets_table', 1),
-(17, '2019_08_19_000000_create_failed_jobs_table', 1),
-(18, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(19, '2023_01_12_123138_create_tournaments_table', 1),
-(20, '2023_01_12_123206_create_register_tournaments_table', 1),
-(21, '2023_01_12_123250_create_clubs_table', 1);
+(46, '2014_10_12_000000_create_users_table', 1),
+(47, '2014_10_12_100000_create_password_resets_table', 1),
+(48, '2019_08_19_000000_create_failed_jobs_table', 1),
+(49, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(50, '2023_01_12_123138_create_tournaments_table', 1),
+(51, '2023_01_12_123206_create_register_tournaments_table', 1),
+(52, '2023_01_12_123250_create_clubs_table', 1),
+(53, '2023_01_19_072644_create_payments_table', 1);
 
 -- --------------------------------------------------------
 
@@ -97,6 +98,31 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tournament_id` bigint(20) NOT NULL,
+  `gross_amount` bigint(20) NOT NULL,
+  `payment_link_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` bigint(20) NOT NULL,
+  `quantity` bigint(20) NOT NULL,
+  `name` varchar(225) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `payments`
+--
+
+INSERT INTO `payments` (`id`, `tournament_id`, `gross_amount`, `payment_link_id`, `price`, `quantity`, `name`, `created_at`, `updated_at`) VALUES
+(1, 1, 20000, '', 20000, 1, 'Register', '2023-01-20 07:29:17', '2023-01-20 07:29:17');
 
 -- --------------------------------------------------------
 
@@ -125,13 +151,22 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `register_tournaments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `club_id` bigint(20) NOT NULL,
-  `tournamen_id` bigint(20) NOT NULL,
+  `tournament_id` bigint(20) NOT NULL,
+  `payment_id` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `hp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `register_tournaments`
+--
+
+INSERT INTO `register_tournaments` (`id`, `club_id`, `tournament_id`, `payment_id`, `name`, `hp`, `email`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 'Tandayu', '089498324', 'dayu2510@gmail.com', 1, '2023-01-20 07:29:17', '2023-01-20 07:30:23');
 
 -- --------------------------------------------------------
 
@@ -158,7 +193,7 @@ CREATE TABLE `tournaments` (
 --
 
 INSERT INTO `tournaments` (`id`, `name`, `description`, `price`, `quota`, `is_open`, `start_regist`, `finish_regist`, `photo`, `created_at`, `updated_at`) VALUES
-(1, 'Tenis Meja', 'Testing Tour', 20000, 50, 1, NULL, NULL, NULL, NULL, NULL);
+(1, 'Tenis Meja', 'Testing Tour', 20000, -1, 1, NULL, NULL, NULL, NULL, '2023-01-20 07:27:59');
 
 -- --------------------------------------------------------
 
@@ -207,6 +242,12 @@ ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
+-- Indeks untuk tabel `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
@@ -253,7 +294,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT untuk tabel `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `personal_access_tokens`
@@ -265,7 +312,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `register_tournaments`
 --
 ALTER TABLE `register_tournaments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `tournaments`
