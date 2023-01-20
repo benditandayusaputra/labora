@@ -11,6 +11,7 @@ import {SET_ITEMS_CLUB} from '../store/slice/masterSlice';
 import {
   SET_VALUE_FORM_TOURNAMENT,
   getForm,
+  SET_TRANSACTION,
 } from '../store/slice/tournamentSlice';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -27,11 +28,17 @@ export default function ({navigation, route}) {
 
   const simpanTournamentHandler = async type => {
     setIsLoading(true);
-    const {status} = await reqSimpanTournament(form);
+    const {status, data} = await reqSimpanTournament(form);
     if (status) {
       if (type === 'waiting_list') {
         navigation.navigate('daftar-tournament');
       } else {
+        dispatch(
+          SET_TRANSACTION({
+            transaction_details: data.transaction_details,
+            item_details: data.item_details,
+          }),
+        );
         navigation.navigate('bayar-tournament');
       }
     }
@@ -143,6 +150,7 @@ export default function ({navigation, route}) {
         SET_VALUE_FORM_TOURNAMENT({value: tournament_id, key: 'tournament_id'}),
       );
       loadItemsClub();
+      setItemsInputanNama([]);
     }
   }, [isFocussed, loadItemsClub, tournament_id, dispatch]);
 
@@ -233,6 +241,19 @@ export default function ({navigation, route}) {
               </View>
             </View>
           ))}
+        </View>
+        <View style={tailwind`mb-2`}>
+          <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
+            Email
+          </Text>
+          <TextField
+            value={form.email}
+            onChangeText={value =>
+              dispatch(SET_VALUE_FORM_TOURNAMENT({value, key: 'email'}))
+            }
+            placeholder="Input Email"
+            style={[styles.underlineField, tailwind`mb-2`]}
+          />
         </View>
         <View style={tailwind`mb-2`}>
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>

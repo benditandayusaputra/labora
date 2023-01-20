@@ -36,8 +36,10 @@ export async function reqItemsClub() {
 
 export async function reqSimpanTournament(payload) {
   try {
-    await axios.post('register_tournament', payload);
-    return {status: true, message: 'Berhasil menyimpan tournament'};
+    const {
+      data: {data},
+    } = await axios.post('register_tournament', payload);
+    return {status: true, message: 'Berhasil menyimpan tournament', data};
   } catch (e) {
     console.error(e);
     return {

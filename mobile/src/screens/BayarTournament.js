@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
   ScrollView,
@@ -10,38 +10,39 @@ import tailwind from 'twrnc';
 import {View, Text} from 'react-native-ui-lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getItemsMetodePembayaran} from '../store/slice/masterSlice';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {requestCharge} from '../utils/payment';
 import LoadingOverlay from '../components/LoadingOverlay';
+import {
+  getTransaction,
+  getForm,
+  SET_FORM_TOURNAMENT,
+  SET_TRANSACTION,
+} from '../store/slice/tournamentSlice';
+import {BASE_URL} from '@env';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function ({navigation}) {
   const itemsPembayaran = useSelector(getItemsMetodePembayaran);
+  const transaction = useSelector(getTransaction);
+  const form = useSelector(getForm);
+  const dispatch = useDispatch();
+  const isFocussed = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const paymentHandler = async method => {
     setIsLoading(true);
     const response = await requestCharge({
-      payment_type: 'gopay',
-      transaction_details: {
-        order_id: '001',
-        gross_amount: 10000,
-      },
-      item_details: [
-        {
-          id: '1',
-          price: 10000,
-          quantity: 1,
-          name: 'Baju',
-        },
-      ],
+      payment_type: method,
+      transaction_details: transaction.transaction_details,
+      item_details: transaction.item_details,
       customer_details: {
-        first_name: 'Ganjar',
-        last_name: 'Pranowo',
-        email: 'ganjar@gmail.com',
-        phone: '081386909765',
+        first_name: form.name,
+        phone: form.hp,
+        email: form.email,
       },
       gopay: {
         enable_callback: true,
-        callback_url: 'someapps://callback',
+        callback_url: `${BASE_URL}register_tournament/update/${transaction.transaction_details.order_id}`,
       },
     });
 
@@ -49,6 +50,8 @@ export default function ({navigation}) {
       const supported = await Linking.canOpenURL(response.link);
 
       if (supported) {
+        dispatch(SET_FORM_TOURNAMENT(null));
+        dispatch(SET_TRANSACTION(null));
         await Linking.openURL(response.link);
       } else {
         Alert.alert(`Don't know how to open this URL: ${response.link}`);
@@ -56,6 +59,14 @@ export default function ({navigation}) {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (isFocussed) {
+      if (!transaction) {
+        navigation.navigate('daftar-tournament');
+      }
+    }
+  }, [isFocussed, navigation, transaction]);
 
   return (
     <View flex style={tailwind`p-4`}>
