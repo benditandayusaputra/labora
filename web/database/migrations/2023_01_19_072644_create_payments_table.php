@@ -15,6 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('tournament_id');
             $table->bigInteger('gross_amount');
             $table->string('payment_link_id', 50);
             $table->bigInteger('price');

@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('club', 'Api\ClubController');
 Route::resource('tournament', 'Api\TournamentController');
 Route::resource('register_tournament', 'Api\RegisterTournamentController');
+Route::post('register_tournament/update/{orderId}', 'Api\RegisterTournamentController@updateStatus');

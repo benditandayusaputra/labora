@@ -55,6 +55,8 @@ class RegisterTournamentController extends Controller
                 return $this->sendError('Validation Error.', $validator->errors(), 422);       
             }
 
+            $temporaryIds = [];
+
             if ( json_decode($request->name) ) {
                 $names = json_decode($request->name);
                 $price = 0;
@@ -63,10 +65,12 @@ class RegisterTournamentController extends Controller
                     $tournament = Tournament::find($request->tournament_id);
                     if ( $tournament ) {
                         $dataSave = array_merge($request->except('name'), ['name' => $value]);
-                        RegisterTournament::create($dataSave);
+                        $saveReg = RegisterTournament::create($dataSave);
                         $tournament->quota = intval($tournamentData->qouta) - 1;
                         $tournament->save();
                         $price = $price + intval($tournamentData->price);
+
+                        array_push($temporaryIds, $saveReg->id);
                     }
                 }
 
@@ -75,7 +79,8 @@ class RegisterTournamentController extends Controller
                     'payment_link_id'   => '',
                     'price'             => $tournamentData->price,
                     'quantity'          => count($names),
-                    'name'              => 'Register'
+                    'name'              => 'Register',
+                    'tournament_id'     => $request->tournament_id
                 ];
 
                 $dataPayment = Payment::create($dataPayment);
@@ -84,9 +89,10 @@ class RegisterTournamentController extends Controller
                 $tournament = Tournament::find($request->tournament_id);
                 if ( $tournament ) {
                     $tournamentData = Tournament::where('id', $request->tournament_id)->first();
-                    RegisterTournament::create($input);
+                    $saveReg = RegisterTournament::create($input);
                     $tournament->quota = intval($tournament->qouta) - 1;
                     $tournament->save();
+                    array_push($temporaryIds, $saveReg->id);
                 }
 
                 $dataPayment = [
@@ -94,10 +100,17 @@ class RegisterTournamentController extends Controller
                     'payment_link_id'   => '',
                     'price'             => $tournamentData->price,
                     'quantity'          => 1,
-                    'name'              => 'Register'
+                    'name'              => 'Register',
+                    'tournament_id'     => $request->tournament_id
                 ];
 
                 $dataPayment = Payment::create($dataPayment);
+            }
+
+            foreach ($temporaryIds as $id) {
+                RegisterTournament::where('id', $id)->update([
+                    'payment_id' => $dataPayment->id
+                ]);
             }
             
             $headerReq = [
@@ -139,7 +152,7 @@ class RegisterTournamentController extends Controller
                 "customer_details" => [
                   "first_name" => $request->name,
                 //   "last_name" => "Tandayu",
-                  "email" => "tandayubend10@gmail.com",
+                  "email" => $request->email,
                   "phone" => $request->hp,
                   "notes" => "Terimakasih Telah Mendaftar, Silahkan Lakukan Pembayaran Anda."
                 ],
@@ -212,5 +225,25 @@ class RegisterTournamentController extends Controller
     public function destroy(RegisterTournament $registerTournament)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\RegisterTournament  $registerTournament
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStatus($orderId)
+    {
+        try {
+            $registerTournament = RegisterTournament::where('payment_id', $orderId)->update([
+                'status' => 1
+            ]);
+    
+            return $this->sendResponse($registerTournament, 'Berhasil Update Status');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), [], 500);
+        }
     }
 }

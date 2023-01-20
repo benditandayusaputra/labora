@@ -17,8 +17,10 @@ class CreateRegisterTournamentsTable extends Migration
             $table->id();
             $table->bigInteger('club_id');
             $table->bigInteger('tournament_id');
+            $table->bigInteger('payment_id')->nullable();
             $table->string('name');
             $table->string('hp')->nullable();
+            $table->string('email')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });
