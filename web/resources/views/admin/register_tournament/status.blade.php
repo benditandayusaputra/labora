@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="{{ asset('template') }}/dist/css/adminlte.min.css">
 </head>
 <body>
-    
+    <center>
+        <div style="height: 50vh; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <i class="fas fa-check-circle fa-3x fa-fw text-success"></i>
+            <h2>Pembayaran Sukses</h2>
+            <small>Labora Received</small>
+        </div>
+    </center>
 </body>
 </html>

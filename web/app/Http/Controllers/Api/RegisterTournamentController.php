@@ -237,7 +237,7 @@ class RegisterTournamentController extends Controller
     public function updateStatus($orderId)
     {
         try {
-            $registerTournament = RegisterTournament::where('payment_id', $orderId)->update([
+           RegisterTournament::where('payment_id', $orderId)->update([
                 'status' => 1
             ]);
     
