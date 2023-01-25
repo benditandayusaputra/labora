@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import LogoGopay from '../../assets/images/logo/gopay-logo.png';
+import LogoQRIS from '../../assets/images/logo/qris-logo.png';
 // import LogoDana from '../../assets/images/logo/dana-pay-logo.png';
 // import LogoOVO from '../../assets/images/logo/ovo-pay-logo.png';
 // import LogoShopeePay from '../../assets/images/logo/shopee-pay-logo.png';
@@ -14,6 +15,14 @@ const masterSlice = createSlice({
         name: 'GoPay',
         logo: LogoGopay,
         value: 'gopay',
+        description: 'Bayar menggunakan gopay',
+      },
+      {
+        name: 'QRIS',
+        logo: LogoQRIS,
+        value: 'qris',
+        description:
+          'Pengguna Dana, OVO dan yang lainnya, bisa menggunaan QRIS sebagai metode pembayaran',
       },
     ],
   },

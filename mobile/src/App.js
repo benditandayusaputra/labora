@@ -3,6 +3,7 @@ import {View, ThemeManager} from 'react-native-ui-lib';
 import Container from './container';
 import {Provider} from 'react-redux';
 import store from './store';
+import FlashMessage from 'react-native-flash-message';
 
 ThemeManager.setComponentTheme('Text', {
   style: {
@@ -23,6 +24,7 @@ export default function () {
       <Provider store={store}>
         <Container />
       </Provider>
+      <FlashMessage floating={true} />
     </View>
   );
 }
