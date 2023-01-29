@@ -24,7 +24,7 @@ class ClubController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.club.create');
     }
 
     /**
@@ -35,7 +35,15 @@ class ClubController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->validate([
+            'name'  => 'required',
+        ], [
+            'name.required'  => 'Nama Harus Di Isi',
+        ]);
+
+        Club::create($input);
+
+        return redirect()->route('club.index')->with('success', 'Data Berhasil Di Tambahkan');
     }
 
     /**
@@ -57,7 +65,7 @@ class ClubController extends Controller
      */
     public function edit(Club $club)
     {
-        //
+        return view('admin.club.edit', compact('club'));
     }
 
     /**
@@ -69,7 +77,15 @@ class ClubController extends Controller
      */
     public function update(Request $request, Club $club)
     {
-        //
+        $input = $request->validate([
+            'name'  => 'required',
+        ], [
+            'name.required'  => 'Nama Harus Di Isi',
+        ]);
+
+        Club::where('id', $club->id)->update($input);
+
+        return redirect()->route('club.index')->with('success', 'Data Berhasil Di Ubah');
     }
 
     /**
@@ -80,6 +96,8 @@ class ClubController extends Controller
      */
     public function destroy(Club $club)
     {
-        //
+        Club::destroy($club->id);
+
+        return redirect()->route('club.index')->with('success', 'Data Berhasil Di Hapus');  
     }
 }

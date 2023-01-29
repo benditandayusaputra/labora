@@ -13,14 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.dashboard.index');
+Route::group(['middleware' => 'guest'], function() {
+    Route::get('/login', 'LoginController@index')->name('login');
+    Route::post('/login', 'LoginController@login')->name('do_login');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard.index');
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::resource('club', 'ClubController');
+    Route::resource('tournament', 'TournamentController');
+    Route::resource('register_tournament', 'RegisterTournamentController');
+    Route::resource('payment', 'PaymentController');
+    Route::resource('master_payment', 'MasterPaymentController');
+    Route::get('/payment_confirm', 'PaymentController@confirm')->name('payment_confirm');
+    Route::get('/publish_tournament/{id}/{publish}', 'TournamentController@publish')->name('publish');
+    Route::get('/logout', 'LoginController@logout')->name('do_logout');
 });
-
-Route::resource('club', 'ClubController');
-Route::resource('tournament', 'TournamentController');
-Route::resource('register_tournament', 'RegisterTournamentController');

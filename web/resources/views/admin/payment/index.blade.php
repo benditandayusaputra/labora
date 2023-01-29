@@ -1,4 +1,4 @@
-@extends('admin.layout.app')
+a@extends('admin.layout.app')
 
 @section('page', 'Pendaftar Turnament')
 
@@ -9,7 +9,7 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col-md-4 col-12">
-                        <h3 class="card-title">Data Pendaftaran</h3>
+                        <h3 class="card-title">Data Pembayaran</h3>
                     </div>
                     <div class="col-md-8 col-12">
                         <form action="" method="get">
@@ -27,23 +27,11 @@
                                   </select>
                                 </div>
                                 <div class="d-flex align-items-center ml-3">
-                                  <label for="club_id" class="mr-2">Club</label>
-                                  <select name="club_id" id="club_id" class="form-control">
-                                    <option value=""></option>
-                                    @foreach ($clubs as $item)
-                                        @if ($request->club_id)
-                                            <option value="{{ $item->id }}" {{ $item->id == $request->club_id ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @else
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endif
-                                    @endforeach
-                                  </select>
-                                </div>
-                                <div class="d-flex align-items-center ml-3">
                                   <label for="status" class="mr-2">Status</label>
                                   <select name="status" id="status" class="form-control">
-                                    <option value="1" {{ $request->status == 1 ? 'selected' : '' }}>Daftar</option>
-                                    <option value="0" {{ $request->status == 0 ? 'selected' : '' }}>Waiting List</option>
+                                    <option value="1" {{ $request->status == 0 ? 'selected' : '' }}>Belum Bayar</option>
+                                    <option value="0" {{ $request->status == 1 ? 'selected' : '' }}>Sudah Bayar</option>
+                                    <option value="0" {{ $request->status == 2 ? 'selected' : '' }}>Sudah Konfirmasi Bayar</option>
                                   </select>
                                 </div>
                                 <div class="d-flex align-items-center ml-3">
@@ -60,10 +48,12 @@
                         <tr>
                             <th>No</th>
                             <th>Turnamen</th>
-                            <th>Club</th>
                             <th>Nama</th>
                             <th>HP</th>
-                            <th>Status</th>
+                            <th>Jumlah</th>
+                            <th>Harga</th>
+                            <th>Bukti Pembayaran</th>
+                            <th>Status Pembayaran</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,10 +61,23 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->tournament->name }}</td>
-                            <td>{{ $item->club->name }}</td>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->hp }}</td>
-                            <td>{{ $item->status == 1 ? 'Sudah Bayar' : 'Waiting List' }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>{{ $item->price }}</td>
+                            <td align="center">
+                                <a href="{{ url('uploads/proof_of_payment/file/'.$item->proof_of_payment) }}" download="{{ $item->proof_of_payment }}">
+                                    <img src="{{ url('uploads/proof_of_payment/file/'.$item->proof_of_payment) }}" alt="Logo" style="max-width: 100px">
+                                </a>
+                            </td>
+                            @if ($item->status == 0)
+                                <td>Belum Membayar</td>
+                            @elseif ($item->status == 1)
+                                <td>
+                                    <button type="button" class="btn btn-success" onclick="confirm('Yakin Konfirmasi Pembayaran??') ? window.location.href = '{{ route('payment_confirm') }}' : ''">Konfirmasi Pembayaran</button>
+                                </td>
+                            @else 
+                                <td>Sudah Di Konfirmasi</td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

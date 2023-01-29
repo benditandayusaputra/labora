@@ -40,7 +40,6 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="{{ asset('template') }}/dist/img/user2-160x160.jpg" class="img-circle elevation-2"
@@ -55,7 +54,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="{{ url('dashboard') }}" class="nav-link active">
+                            <a href="{{ url('dashboard') }}" class="nav-link @if (Request::route()->getName() == 'dashboard') active @endif">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
@@ -63,7 +62,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('club.index') }}" class="nav-link">
+                            <a href="{{ route('club.index') }}" class="nav-link @if (Request::route()->getName() == 'club.index') active @endif">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     Club
@@ -71,7 +70,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('tournament.index') }}" class="nav-link">
+                            <a href="{{ route('tournament.index') }}" class="nav-link @if (Request::route()->getName() == 'tournament.index') active @endif">
                                 <i class="nav-icon fas fa-trophy"></i>
                                 <p>
                                     Turnamen
@@ -79,10 +78,34 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('register_tournament.index') }}" class="nav-link">
+                            <a href="{{ route('register_tournament.index') }}" class="nav-link @if (Request::route()->getName() == 'register_tournament.index') active @endif">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     Pendaftaran
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('payment.index') }}" class="nav-link @if (Request::route()->getName() == 'payment.index') active @endif">
+                                <i class="nav-icon fas fa-dollar-sign"></i>
+                                <p>
+                                    Pembayaran
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('master_payment.index') }}" class="nav-link @if (Request::route()->getName() == 'master_payment.index') active @endif">
+                                <i class="nav-icon fas fa-dollar-sign"></i>
+                                <p>
+                                    Metode Pembayaran
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('do_logout') }}" class="nav-link">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>
+                                    Logout
                                 </p>
                             </a>
                         </li>
@@ -98,6 +121,9 @@
                         <div class="col-sm-6">
                             <h1 class="m-0">@yield('page')</h1>
                         </div>
+                        {{--  <div class="col-sm-6 text-right">
+                            <button type="button" class="btn btn-success">Publish</button>
+                        </div>  --}}
                     </div>
                 </div>
             </div>
@@ -110,7 +136,7 @@
         </div>
 
         <footer class="main-footer">
-            <strong>Copyright &copy; 2022 <a href="https://benditandayusaputra.github.io">Labora</a>.</strong> All
+            <strong>Copyright &copy; {{ date('Y') }} <a href="https://benditandayusaputra.github.io">Labora</a>.</strong> All
             rights reserved.
         </footer>
     </div>

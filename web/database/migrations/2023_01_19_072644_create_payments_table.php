@@ -17,10 +17,12 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->bigInteger('tournament_id');
             $table->bigInteger('gross_amount');
-            $table->string('payment_link_id', 50);
+            $table->string('payment_link_id', 50)->nullable();
             $table->bigInteger('price');
             $table->bigInteger('quantity');
             $table->string('name', 225);
+            $table->enum('status', [0, 1, 2])->default(0);
+            $table->string('proof_of_payment', 225)->nullable();
             $table->timestamps();
         });
     }

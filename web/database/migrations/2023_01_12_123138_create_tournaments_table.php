@@ -22,8 +22,11 @@ class CreateTournamentsTable extends Migration
             $table->boolean('is_open')->nullable();
             $table->dateTime('start_regist')->nullable();
             $table->dateTime('finish_regist')->nullable();
-            $table->text('photo')->nullable();
+            $table->text('logo')->nullable();
+            $table->string('division', 255)->nullable();
+            $table->boolean('published')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

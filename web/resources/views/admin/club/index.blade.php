@@ -8,11 +8,18 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
+                    @if (session('success'))
+                        <div class="col-12 mb-2">
+                            <div class="alert alert-success" role="alert">
+                                <strong>{{ session('success') }}</strong>
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-6">
                         <h3 class="card-title">Data Club</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <button type="button" class="btn btn-primary">Tambah Data</button>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '{{ route('club.create') }}'">Tambah Club</button>
                     </div>
                 </div>
             </div>
@@ -22,7 +29,8 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Club</th>
-                            <th>Singkatan</th>
+                            {{--  <th>Singkatan</th>  --}}
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +38,15 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->abbreviation }}</td>
+                            {{--  <td>{{ $item->abbreviation }}</td>  --}}
+                            <td class="d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-success mr-2" onclick="window.location.href = '{{ route('club.edit', $item->id) }}'"><i class="fa fa-edit"></i></button>
+                                <form action="{{ route('club.destroy', $item->id) }}" method="post" id="formHapus">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="button" class="btn btn-danger" onclick="if(confirm('Yakin Hapus Data?')) document.getElementById('formHapus').submit()"><i class="fa fa-trash"></i></button>
+                                </form>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -22,7 +22,7 @@ class TournamentSeeder extends Seeder
             'is_open'       => true,
             'start_regist'  => null,
             'finish_regist' => null,
-            'photo'         => null
+            'logo'          => null
         ]);
     }
 }

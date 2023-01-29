@@ -22,6 +22,9 @@ class CreateRegisterTournamentsTable extends Migration
             $table->string('hp')->nullable();
             $table->string('email')->nullable();
             $table->boolean('status');
+            $table->enum('paid_state', [1, 2, 3]);
+            $table->boolean('published')->default(0);
+            $table->text('proof_of_payment')->nullable();
             $table->timestamps();
         });
     }

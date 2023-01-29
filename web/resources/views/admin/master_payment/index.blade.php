@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('page', 'Tournament')
+@section('page', 'Metode Pembayaran')
 
 @section('content')
 <div class="row">
@@ -16,10 +16,10 @@
                         </div>
                     @endif
                     <div class="col-6">
-                        <h3 class="card-title">Data Tournament</h3>
+                        <h3 class="card-title">Data Metode Pembayaran</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <button type="button" class="btn btn-primary" onclick="window.location.href = '{{ route('tournament.create') }}'">Tambah Tournament</button>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '{{ route('master_payment.create') }}'">Tambah Metode Pembayaran</button>
                     </div>
                 </div>
             </div>
@@ -28,34 +28,26 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Tournament</th>
-                            <th>Harga</th>
-                            <th>Sisa Slot</th>
+                            <th>Nama Metode Pembayaran</th>
+                            <th>Atas Nama</th>
+                            <th>No Rek</th>
                             <th>Logo</th>
-                            <th>Publikasi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tournaments as $item) 
+                        @foreach ($master_payments as $item) 
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->bank }}</td>
+                            <td>{{ $item->no_rek }}</td>
                             <td>{{ $item->name }}</td>
-                            <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                            <td>{{ $item->quota }}</td>
                             <td align="center">
-                                <img src="{{ url('uploads/tournament/logo/'.$item->logo) }}" alt="Logo" style="max-width: 80px">
-                            </td>
-                            <td align="center">
-                                @if ($item->published == 0)
-                                    <button type="button" class="btn btn-success mr-2 d-inline" onclick="window.location.href = '{{ url('publish_tournament/'.$item->id.'/1') }}'"><i class="fa fa-eye"></i> Publish</button>
-                                @else
-                                    <button type="button" class="btn btn-success mr-2 d-inline" onclick="window.location.href = '{{ url('publish_tournament/'.$item->id.'/0') }}'"><i class="fa fa-eye-slash"></i> Unpublish</button>
-                                @endif
+                                <img src="{{ url('uploads/master_payment/logo/'.$item->logo_bank) }}" alt="Logo" style="max-width: 80px">
                             </td>
                             <td class="d-flex align-items-center justify-content-center">
-                                <button type="button" class="btn btn-success mr-2" onclick="window.location.href = '{{ route('tournament.edit', $item->id) }}'"><i class="fa fa-edit"></i></button>
-                                <form action="{{ route('tournament.destroy', $item->id) }}" method="post" id="formHapus">
+                                {{--  <button type="button" class="btn btn-success mr-2" onclick="window.location.href = '{{ route('master_payment.edit', $item->id) }}'"><i class="fa fa-edit"></i></button>  --}}
+                                <form action="{{ route('master_payment.destroy', $item->id) }}" method="post" id="formHapus">
                                     @csrf
                                     @method('delete')
                                     <button type="button" class="btn btn-danger" onclick="if(confirm('Yakin Hapus Data?')) document.getElementById('formHapus').submit()"><i class="fa fa-trash"></i></button>
