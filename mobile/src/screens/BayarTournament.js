@@ -1,11 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Linking,
-  Alert,
-} from 'react-native';
+import {TouchableOpacity, ScrollView, Image, Linking} from 'react-native';
 import tailwind from 'twrnc';
 import {View, Text} from 'react-native-ui-lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,6 +15,8 @@ import {
 } from '../store/slice/tournamentSlice';
 import {BASE_URL} from '@env';
 import {useIsFocused} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
+import GlobalStyles from '../constants/GlobalStyles';
 
 export default function ({navigation}) {
   const itemsPembayaran = useSelector(getItemsMetodePembayaran);
@@ -29,6 +25,7 @@ export default function ({navigation}) {
   const dispatch = useDispatch();
   const isFocussed = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
+
   const paymentHandler = async method => {
     setIsLoading(true);
     const response = await requestCharge({
@@ -46,17 +43,30 @@ export default function ({navigation}) {
       },
     });
 
-    if (response.status) {
-      const supported = await Linking.canOpenURL(response.link);
+    if (method === 'gopay') {
+      if (response.status) {
+        const supported = await Linking.canOpenURL(response.link);
 
-      if (supported) {
-        dispatch(SET_FORM_TOURNAMENT(null));
-        dispatch(SET_TRANSACTION(null));
-        await Linking.openURL(response.link);
-      } else {
-        Alert.alert(`Don't know how to open this URL: ${response.link}`);
+        if (supported) {
+          dispatch(SET_FORM_TOURNAMENT(null));
+          dispatch(SET_TRANSACTION(null));
+          await Linking.openURL(response.link);
+        } else {
+          showMessage({
+            type: 'danger',
+            message: 'URL Tidak Valid',
+          });
+        }
       }
+    } else if (response?.link) {
+      navigation.navigate('qris-payment', {url_qrcode: response.link});
+    } else {
+      showMessage({
+        type: 'danger',
+        message: response.message,
+      });
     }
+
     setIsLoading(false);
   };
 
@@ -79,43 +89,51 @@ export default function ({navigation}) {
         />
       </TouchableOpacity>
       <View>
-        <Text
-          style={[{fontFamily: 'SFNSDisplay-Black'}, tailwind`text-3xl mt-4`]}>
-          Bayar
+        <Text style={[GlobalStyles.fontBlack, tailwind`text-3xl mt-4`]}>
+          Metode Bayar
         </Text>
       </View>
-      <ScrollView
-        style={[
-          {backgroundColor: '#F8F8F8', borderRadius: 8, flex: 1},
-          tailwind`mt-4`,
-        ]}>
+      <ScrollView style={[GlobalStyles.containerCard, tailwind`mt-4 h-full`]}>
         {itemsPembayaran.map((item, idx) => (
           <TouchableOpacity
             key={idx}
-            onPress={() => paymentHandler('gopay')}
+            onPress={() => paymentHandler(item.value)}
             style={({pressed}) => pressed && {opacity: 0.6}}>
             <View
-              style={[
-                tailwind`px-4 py-8`,
-                {borderBottomWidth: 1, borderBottomColor: '#ddd'},
-              ]}
+              style={[tailwind`px-4 py-8`, GlobalStyles.cardItemPembayaran]}
               row
               centerV>
               <Image
                 source={item.logo}
-                style={{width: 20, height: 20, borderRadius: 4}}
+                style={GlobalStyles.styleImageLogoMetodePembayaran}
               />
-              <Text
-                style={[
-                  tailwind`text-base ml-4`,
-                  {fontFamily: 'SFNSDisplay-Bold'},
-                ]}
-                flexG>
-                {item.name}
-              </Text>
+              <View style={tailwind`ml-4`}>
+                <Text
+                  style={[tailwind`text-base`, GlobalStyles.fontBold]}
+                  flexG>
+                  {item.name}
+                </Text>
+                <Text>{item.description}.</Text>
+              </View>
             </View>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity
+          style={({pressed}) => pressed && {opacity: 0.6}}
+          onPress={() => navigation.navigate('upload-bukti-transfer')}>
+          <View
+            style={[tailwind`px-4 py-8`, GlobalStyles.cardItemPembayaran]}
+            row
+            centerV>
+            <Ionicons name="card" size={20} color="#293241" />
+            <View style={tailwind`ml-4`}>
+              <Text style={[tailwind`text-base`, GlobalStyles.fontBold]} flexG>
+                Transfer Bank
+              </Text>
+              <Text>Transfer dan upload bukti transfer bank.</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

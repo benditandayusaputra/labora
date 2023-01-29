@@ -5,8 +5,11 @@ export async function requestCharge(payload) {
     const {data} = await axiosMidtrans.post('charge', payload);
     return {
       status: true,
-      message: 'Berhasil memproses pembayaran',
-      link: data.actions[1].url,
+      message: data?.status_message,
+      link:
+        data.actions?.find(res => res.name === 'deeplink-redirect')?.url ||
+        data.actions?.find(res => res.name === 'generate-qr-code')?.url ||
+        null,
     };
   } catch (e) {
     console.error(e);

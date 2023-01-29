@@ -12,6 +12,7 @@ import {
   SET_VALUE_FORM_TOURNAMENT,
   getForm,
   SET_TRANSACTION,
+  SET_FORM_TOURNAMENT,
 } from '../store/slice/tournamentSlice';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -150,6 +151,8 @@ export default function ({navigation, route}) {
         SET_VALUE_FORM_TOURNAMENT({value: tournament_id, key: 'tournament_id'}),
       );
       loadItemsClub();
+      dispatch(SET_FORM_TOURNAMENT(null));
+      dispatch(SET_TRANSACTION(null));
       setItemsInputanNama([]);
     }
   }, [isFocussed, loadItemsClub, tournament_id, dispatch]);
@@ -178,6 +181,37 @@ export default function ({navigation, route}) {
         <View style={tailwind`mb-2`}>
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
             Club
+          </Text>
+          {!isLoading && (
+            <Picker
+              showSearch
+              placeholder={'Pilih Club'}
+              style={styles.underlineField}
+              migrateTextField
+              topBarProps={{title: 'Daftar Club'}}
+              onChange={item =>
+                dispatch(
+                  SET_VALUE_FORM_TOURNAMENT({
+                    value: item.value,
+                    key: 'club_id',
+                  }),
+                )
+              }
+              value={form.club_id}>
+              {itemsClub.map(item => (
+                <Picker.Item
+                  key={item.id}
+                  value={item.id}
+                  label={item.name}
+                  disabled={item.disabled}
+                />
+              ))}
+            </Picker>
+          )}
+        </View>
+        <View style={tailwind`mb-2`}>
+          <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
+            Divisi
           </Text>
           {!isLoading && (
             <Picker

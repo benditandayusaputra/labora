@@ -4,13 +4,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DaftarTournament from '../screens/DaftarTournament';
 import FormTournament from '../screens/FormTournament';
 import BayarTournament from '../screens/BayarTournament';
+import QRISPayment from '../screens/QRISPayment';
+import UploadBuktiTransfer from '../screens/UploadBuktiTransfer';
 
 const Stack = createNativeStackNavigator();
 
 export default function () {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="daftar-tournament">
+      <Stack.Navigator>
         <Stack.Screen
           name="daftar-tournament"
           component={DaftarTournament}
@@ -30,9 +32,20 @@ export default function () {
           component={FormTournament}
           options={{headerShown: false}}
         />
+
+        <Stack.Screen
+          name="qris-payment"
+          component={QRISPayment}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="bayar-tournament"
           component={BayarTournament}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="upload-bukti-transfer"
+          component={UploadBuktiTransfer}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
