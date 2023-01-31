@@ -13,7 +13,7 @@ import {
   SET_FORM_TOURNAMENT,
   SET_TRANSACTION,
 } from '../store/slice/tournamentSlice';
-import {BASE_URL} from '@env';
+import {BASE_URL} from '../config';
 import {useIsFocused} from '@react-navigation/native';
 import {showMessage} from 'react-native-flash-message';
 import GlobalStyles from '../constants/GlobalStyles';
@@ -97,7 +97,7 @@ export default function ({navigation}) {
         {itemsPembayaran.map((item, idx) => (
           <TouchableOpacity
             key={idx}
-            onPress={() => paymentHandler(item.value)}
+            // onPress={() => paymentHandler(item.value)}
             style={({pressed}) => pressed && {opacity: 0.6}}>
             <View
               style={[tailwind`px-4 py-8`, GlobalStyles.cardItemPembayaran]}

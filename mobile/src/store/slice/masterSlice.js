@@ -10,6 +10,7 @@ const masterSlice = createSlice({
   initialState: {
     itemsClub: [],
     itemsTournament: [],
+    itemsRekening: [],
     itemsMetodePembayaran: [
       {
         name: 'GoPay',
@@ -33,14 +34,19 @@ const masterSlice = createSlice({
     SET_ITEMS_CLUB(state, {payload}) {
       state.itemsClub = payload;
     },
+    SET_ITEMS_REKENING(state, {payload}) {
+      state.itemsRekening = payload;
+    },
   },
 });
 
-export const {SET_ITEMS_TOURNAMENT, SET_ITEMS_CLUB} = masterSlice.actions;
+export const {SET_ITEMS_TOURNAMENT, SET_ITEMS_CLUB, SET_ITEMS_REKENING} =
+  masterSlice.actions;
 
 export const getItemsClub = state => state.master.itemsClub;
 export const getItemsMetodePembayaran = state =>
   state.master.itemsMetodePembayaran;
 export const getItemsTournament = state => state.master.itemsTournament;
+export const getItemsRekening = state => state.master.itemsRekening;
 
 export default masterSlice.reducer;

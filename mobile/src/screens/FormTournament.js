@@ -36,8 +36,10 @@ export default function ({navigation, route}) {
       } else {
         dispatch(
           SET_TRANSACTION({
-            transaction_details: data.transaction_details,
-            item_details: data.item_details,
+            transaction_details: data?.transaction_details || null,
+            item_details: data?.item_details || null,
+            order_id: data.id,
+            price: data.gross_amount,
           }),
         );
         navigation.navigate('bayar-tournament');
@@ -117,7 +119,13 @@ export default function ({navigation, route}) {
     ]);
   };
   const prosesDaftarHandler = () => {
-    if (form.hp && form.club_id && itemsInputanNama.length) {
+    if (
+      form.hp &&
+      form.club_id &&
+      itemsInputanNama.length &&
+      form.email &&
+      form.division
+    ) {
       Alert.alert('Perhatian', 'Mohon pilih jenis pendaftaran', [
         'Batal',
         {
@@ -143,17 +151,18 @@ export default function ({navigation, route}) {
     }
     setIsLoading(false);
   }, [dispatch]);
-  const {tournament_id, nama_tournament} = route.params;
+  const {tournament_id, nama_tournament, division} = route.params;
 
   useEffect(() => {
+    loadItemsClub();
+
     if (isFocussed) {
-      dispatch(
-        SET_VALUE_FORM_TOURNAMENT({value: tournament_id, key: 'tournament_id'}),
-      );
-      loadItemsClub();
       dispatch(SET_FORM_TOURNAMENT(null));
       dispatch(SET_TRANSACTION(null));
       setItemsInputanNama([]);
+      dispatch(
+        SET_VALUE_FORM_TOURNAMENT({value: tournament_id, key: 'tournament_id'}),
+      );
     }
   }, [isFocussed, loadItemsClub, tournament_id, dispatch]);
 
@@ -216,26 +225,21 @@ export default function ({navigation, route}) {
           {!isLoading && (
             <Picker
               showSearch
-              placeholder={'Pilih Club'}
+              placeholder={'Pilih Divisi'}
               style={styles.underlineField}
               migrateTextField
-              topBarProps={{title: 'Daftar Club'}}
+              topBarProps={{title: 'Divisi'}}
               onChange={item =>
                 dispatch(
                   SET_VALUE_FORM_TOURNAMENT({
                     value: item.value,
-                    key: 'club_id',
+                    key: 'division',
                   }),
                 )
               }
-              value={form.club_id}>
-              {itemsClub.map(item => (
-                <Picker.Item
-                  key={item.id}
-                  value={item.id}
-                  label={item.name}
-                  disabled={item.disabled}
-                />
+              value={form.division}>
+              {division.map(item => (
+                <Picker.Item key={item} value={item} label={item} />
               ))}
             </Picker>
           )}

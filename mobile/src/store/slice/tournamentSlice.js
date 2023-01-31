@@ -10,6 +10,7 @@ const tournamentSlice = createSlice({
       hp: null,
       email: null,
       status: 0,
+      division: null,
     },
     transaction: null,
   },

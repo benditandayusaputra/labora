@@ -1,4 +1,5 @@
 import axiosMidtrans from '../plugins/axiosMidtrans';
+import axios from '../plugins/axios';
 
 export async function requestCharge(payload) {
   try {
@@ -14,5 +15,22 @@ export async function requestCharge(payload) {
   } catch (e) {
     console.error(e);
     return {status: false, message: 'Gagal mengeksekusi api charge'};
+  }
+}
+
+export async function reqItemsRekening() {
+  try {
+    const {
+      data: {data},
+    } = await axios.get('master_payment');
+
+    return {status: true, message: 'Berhasil mendapatkan data', data};
+  } catch (e) {
+    console.error(e);
+    return {
+      status: false,
+      message: 'Gagal mengeksekusi api reqItemsTournament',
+      data: [],
+    };
   }
 }

@@ -49,3 +49,24 @@ export async function reqSimpanTournament(payload) {
     };
   }
 }
+
+export async function reqSimpanUploadBuktiBayar(payload) {
+  try {
+    await axios({
+      method: 'post',
+      url: 'register_tournament/confirm_payment',
+      headers: {'Content-Type': 'multipart/form-data'},
+      transformRequest: () => {
+        return payload;
+      },
+      data: payload,
+    });
+    return {status: true, message: 'Berhasil upload bukti bayar'};
+  } catch (e) {
+    console.error(e);
+    return {
+      status: false,
+      message: 'Gagal mengeksekusi api reqSimpanUploadBuktiBayar',
+    };
+  }
+}

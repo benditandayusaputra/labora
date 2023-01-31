@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {MIDTRANS_APIKEY, MIDTRANS_BASEURL} from '@env';
+import {MIDTRANS_APIKEY, MIDTRANS_BASEURL} from '../config';
 
 const instance = axios.create({
   baseURL: MIDTRANS_BASEURL,

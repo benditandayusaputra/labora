@@ -52,6 +52,7 @@ export default function ({navigation}) {
               navigation.navigate('form-tournament', {
                 tournament_id: item.id,
                 nama_tournament: item.name,
+                division: item.division ? JSON.parse(item.division) : null,
               })
             }
             style={({pressed}) => [
@@ -91,9 +92,13 @@ export default function ({navigation}) {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={{
-                    uri: 'https://benditandayusaputra.github.io/assets/img/services/s4.png',
-                  }}
+                  source={
+                    item.logo_url
+                      ? {
+                          uri: item.logo_url,
+                        }
+                      : require('../assets/images/s4.png')
+                  }
                   style={{width: 56, height: 56}}
                   resizeMode="contain"
                 />
