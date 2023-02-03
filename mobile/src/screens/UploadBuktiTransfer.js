@@ -59,14 +59,29 @@ export default function ({navigation}) {
           proof_of_payment: fileBuktiPembayaran,
         }),
       );
-      showMessage({
-        type: status ? 'success' : 'danger',
-        message,
-      });
+
+      Alert.alert(
+        'Perhatian',
+        status
+          ? transaction.email
+            ? 'Upload berhasil, silahkan cek email anda'
+            : 'Upload berhasil, silahkan tunggu konfirmasi admin'
+          : message,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              if (status) {
+                dispatch(SET_FORM_TOURNAMENT(null));
+                dispatch(SET_TRANSACTION(null));
+                navigation.navigate('daftar-tournament');
+              }
+            },
+          },
+        ],
+      );
+
       if (status) {
-        dispatch(SET_FORM_TOURNAMENT(null));
-        dispatch(SET_TRANSACTION(null));
-        navigation.navigate('daftar-tournament');
       }
       setIsLoading(false);
     } catch (error) {
@@ -75,21 +90,21 @@ export default function ({navigation}) {
   };
 
   useEffect(() => {
-    if (isFocussed) {
-      if (!transaction) {
-        navigation.navigate('daftar-tournament');
-      } else {
-        const loadItemsRekekning = async () => {
-          setIsLoading(true);
-          const {status, data} = await reqItemsRekening();
-          if (status) {
-            dispatch(SET_ITEMS_REKENING(data));
-          }
-          setIsLoading(false);
-        };
-        loadItemsRekekning();
+    // if (isFocussed) {
+    //   if (!transaction) {
+    //     navigation.navigate('daftar-tournament');
+    //   } else {
+    const loadItemsRekekning = async () => {
+      setIsLoading(true);
+      const {status, data} = await reqItemsRekening();
+      if (status) {
+        dispatch(SET_ITEMS_REKENING(data));
       }
-    }
+      setIsLoading(false);
+    };
+    loadItemsRekekning();
+    // }
+    // }
   }, [dispatch, isFocussed, navigation, transaction]);
 
   return (
@@ -108,7 +123,8 @@ export default function ({navigation}) {
         </Text>
       </View>
       <ScrollView
-        style={[GlobalStyles.containerCard, tailwind`mt-4 p-4 h-full`]}>
+        style={[GlobalStyles.containerCard, tailwind`mt-4 p-4`]}
+        showsVerticalScrollIndicator={false}>
         {transaction && (
           <View
             style={{
@@ -126,12 +142,39 @@ export default function ({navigation}) {
         {itemsRekening.map(res => (
           <View
             style={[tailwind`p-4 my-2 mb-4`, styles.cardNoRekening]}
-            key={res.id}>
-            <Text style={[tailwind`text-base`]}>{res.bank}</Text>
-            <Text style={[GlobalStyles.fontBold, tailwind`text-xl mt-2`]}>
-              {res.no_rek}
-            </Text>
-            <Text style={[tailwind`text-sm`]}>{res.name}</Text>
+            key={res.id}
+            row
+            centerV>
+            <View
+              style={{
+                width: 96,
+                height: 96,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={
+                  res.logo_url
+                    ? {
+                        uri: res.logo_url,
+                      }
+                    : require('../assets/images/labora.png')
+                }
+                style={{width: 56, height: 56}}
+                resizeMode="contain"
+              />
+            </View>
+            <View>
+              <Text style={[tailwind`text-base`]}>
+                {res.bank} - {res.name}
+              </Text>
+              <Text
+                style={[GlobalStyles.fontBold, tailwind`text-xl mt-2`]}
+                selectable={true}>
+                {res.no_rek}
+              </Text>
+              <Text style={[tailwind`text-sm`]}></Text>
+            </View>
           </View>
         ))}
         {itemsRekening.length === 0 && (
@@ -161,6 +204,7 @@ export default function ({navigation}) {
             borderRadius={8}
           />
         </View>
+        <View style={{height: 100}}></View>
       </ScrollView>
       <Button
         label="Upload Bukti Pembayaran"
@@ -199,6 +243,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginBottom: 10,
     borderWidth: 4,
+    flex: 1,
     borderStyle: 'dotted',
     borderRadius: 20,
     borderColor: '#fca311',

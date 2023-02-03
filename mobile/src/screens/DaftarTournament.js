@@ -32,7 +32,7 @@ export default function ({navigation}) {
   }, [isFocussed, loadItemsTournamentHandler]);
 
   return (
-    <View flex style={tailwind`p-4`}>
+    <View flex>
       {itemsTournament.length === 0 && (
         <Text>Tidak ditemukan data tournament</Text>
       )}
@@ -44,26 +44,28 @@ export default function ({navigation}) {
           />
         }
         data={itemsTournament}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(_, idx) => idx}
-        style={{backgroundColor: '#EFEFEF', flex: 1}}
-        renderItem={({item}) => (
+        style={[{backgroundColor: '#EBF0F4', flex: 1}, tailwind`p-4`]}
+        renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('form-tournament', {
                 tournament_id: item.id,
                 nama_tournament: item.name,
                 division: item.division ? JSON.parse(item.division) : null,
+                description: item.description,
               })
             }
-            style={({pressed}) => [
-              {borderRadius: 8},
-              pressed && {opacity: 0.8},
-            ]}>
+            style={({pressed}) => [pressed && {opacity: 0.8}]}>
             <View
               row
               style={[
-                {backgroundColor: '#F8F8F8', borderRadius: 8},
-                tailwind`px-4 py-8`,
+                {
+                  backgroundColor: '#FFF',
+                  elevation: 4,
+                },
+                tailwind`px-4 py-8 mb-4`,
               ]}>
               <View flex>
                 <Text
@@ -97,7 +99,7 @@ export default function ({navigation}) {
                       ? {
                           uri: item.logo_url,
                         }
-                      : require('../assets/images/s4.png')
+                      : require('../assets/images/labora.png')
                   }
                   style={{width: 56, height: 56}}
                   resizeMode="contain"

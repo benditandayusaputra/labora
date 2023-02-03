@@ -5,12 +5,10 @@ const tournamentSlice = createSlice({
   initialState: {
     form: {
       tournament_id: null,
-      club_id: null,
-      name: null,
+      club: null,
       hp: null,
       email: null,
       status: 0,
-      division: null,
     },
     transaction: null,
   },
@@ -24,8 +22,7 @@ const tournamentSlice = createSlice({
     SET_FORM_TOURNAMENT(state, {payload}) {
       state.form = payload || {
         tournament_id: null,
-        club_id: null,
-        name: null,
+        club: null,
         hp: null,
         email: null,
         status: 0,

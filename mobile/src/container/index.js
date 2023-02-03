@@ -17,14 +17,13 @@ export default function () {
           name="daftar-tournament"
           component={DaftarTournament}
           options={{
-            title: 'LABORA',
+            title: 'PT. Labora Menyelenggarakan',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: 'SFNSDisplay-Bold',
               color: '#293241',
               fontSize: 14,
             },
-            headerShadowVisible: false,
           }}
         />
         <Stack.Screen
