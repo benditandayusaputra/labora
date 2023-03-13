@@ -62,7 +62,8 @@ export default function ({navigation, route}) {
   };
   const addAnggotaHandler = () => {
     if (modelTextNama && modelDivisi) {
-      if (itemsInputanNama.length < 5) {
+      const max = quota > 5 ? 5 : quota
+      if (itemsInputanNama.length < max) {
         setItemsInputanNama(prevState =>
           prevState.concat({nama: modelTextNama, divisi: modelDivisi}),
         );
@@ -70,7 +71,7 @@ export default function ({navigation, route}) {
       } else {
         Alert.alert(
           'Gagal',
-          'Jumlah nama yang didaftarkan tidak boleh lebih dari 5',
+          'Jumlah nama yang didaftarkan tidak boleh lebih dari ' + max,
           ['Oke'],
         );
       }
@@ -119,7 +120,7 @@ export default function ({navigation, route}) {
     }
     setIsLoading(false);
   }, [dispatch]);
-  const {tournament_id, nama_tournament, division, description} = route.params;
+  const {tournament_id, nama_tournament, division, description, quota} = route.params;
 
   useEffect(() => {
     loadItemsClub();
@@ -154,7 +155,7 @@ export default function ({navigation, route}) {
                 {fontFamily: 'SFNSDisplay-Black'},
                 tailwind`text-3xl mt-4`,
               ]}>
-              Form Anggota
+              Form Peserta
             </Text>
           </View>
           <View style={tailwind`mb-4`}>
@@ -239,7 +240,7 @@ export default function ({navigation, route}) {
         </View>
         <View style={tailwind`mb-4`}>
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
-            Club <Text style={{color: 'red'}}>*</Text>
+            Club/PTM <Text style={{color: 'red'}}>*</Text>
           </Text>
           <TextField
             value={form.club}
@@ -252,7 +253,7 @@ export default function ({navigation, route}) {
         </View>
         <View style={tailwind`mb-2`}>
           <Text style={[{fontFamily: 'SFNSDisplay-Bold'}, tailwind`text-base`]}>
-            Anggota <Text style={{color: 'red'}}>*</Text>
+            Peserta (Max {quota > 5 ? '5' : quota}) <Text style={{color: 'red'}}>*</Text>
           </Text>
           <View row centerV style={tailwind`mb-2`}>
             <Pressable style={{flex: 1}} onPress={openModalHandler}>
@@ -261,7 +262,7 @@ export default function ({navigation, route}) {
                   value={modelTextNama}
                   editable={false}
                   on
-                  placeholder="Input Anggota"
+                  placeholder="Input Peserta"
                   style={styles.underlineField}
                 />
               </View>

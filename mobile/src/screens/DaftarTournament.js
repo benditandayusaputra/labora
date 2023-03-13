@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {Image, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
+import {Image, FlatList, TouchableOpacity, RefreshControl, Alert} from 'react-native';
 import {View, Text} from 'react-native-ui-lib';
 import tailwind from 'twrnc';
 import {useSelector, useDispatch} from 'react-redux';
@@ -15,6 +15,20 @@ export default function ({navigation}) {
   const isFocussed = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const clickTournamentHandler = (item) => {
+    if (item.quota > 0) {
+      navigation.navigate('form-tournament', {
+        tournament_id: item.id,
+        nama_tournament: item.name,
+        division: item.division ? JSON.parse(item.division) : null,
+        description: item.description,
+        quota: item.quota,
+      })
+    } else {
+      Alert.alert('Gagal', 'Slot Turnamen Telah Habis!', ['Oke']);
+    }
+  };
 
   const loadItemsTournamentHandler = useCallback(async () => {
     setIsLoading(true);
@@ -50,12 +64,7 @@ export default function ({navigation}) {
         renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('form-tournament', {
-                tournament_id: item.id,
-                nama_tournament: item.name,
-                division: item.division ? JSON.parse(item.division) : null,
-                description: item.description,
-              })
+              clickTournamentHandler(item)
             }
             style={({pressed}) => [pressed && {opacity: 0.8}]}>
             <View
